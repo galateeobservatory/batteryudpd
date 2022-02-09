@@ -1,10 +1,11 @@
-use std::cell::RefCell;
-use postgres::{Client, NoTls};
 use crate::config::Config;
+use postgres::{Client, NoTls};
+use std::cell::RefCell;
 
+/// A struct to hold the battery database connection
 #[allow(dead_code)]
 pub struct BatteryDatabase {
-    database_client: RefCell<Client>
+    database_client: RefCell<Client>,
 }
 
 #[allow(dead_code)]
@@ -19,8 +20,8 @@ impl BatteryDatabase {
                     .password(&*config.db_password)
                     .dbname(&*config.db_name)
                     .connect(NoTls)
-                    .map_err(|_| "BatteryDatabase: Failed to connect to database")?
-            )
+                    .map_err(|_| "BatteryDatabase: Failed to connect to database")?,
+            ),
         })
     }
 }

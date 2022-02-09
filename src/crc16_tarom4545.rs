@@ -5,7 +5,10 @@ pub fn validate_line(line: &str) -> Result<&str, &'static str> {
     if line_len < 5 {
         return Err("crc16_tarom4545::validate_line: line too short");
     }
-    if u16::from_str_radix(&line[line_len - 4..], 16).map_err(|_| "crc16_tarom4545::validate_line: missing trailing checksum")? == crc16_tarom4545(&line[..line_len - 4]) {
+    if u16::from_str_radix(&line[line_len - 4..], 16)
+        .map_err(|_| "crc16_tarom4545::validate_line: missing trailing checksum")?
+        == crc16_tarom4545(&line[..line_len - 4])
+    {
         return Ok(line);
     }
     return Err("crc16_tarom4545::validate_line: checksum mismatch");

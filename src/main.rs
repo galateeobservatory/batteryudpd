@@ -1,5 +1,5 @@
+use batteryudpd::{battery_database, config, crc16_tarom4545};
 use std::net::UdpSocket;
-use batteryudpd::{crc16_tarom4545, config, battery_database};
 
 fn main() {
     let config = config::Config::get().unwrap_or_else(|err| {
