@@ -8,7 +8,7 @@ use chrono::{NaiveDate, NaiveTime};
 /// This struct represents a line sent by the Steca Tarom4545 battery monitor.
 #[allow(dead_code)]
 #[derive(Copy, Clone, Debug, PartialEq)]
-struct BatteryReadingLine {
+pub struct BatteryReadingLine {
     pub num_ver: Option<u8>,
     pub jour_sommet: Option<NaiveDate>,
     pub heure_sommet: Option<NaiveTime>,
@@ -72,9 +72,9 @@ impl BatteryReadingLine {
         erreur_crc16: true,
     };
 
-    pub fn new(battery_line: &str) -> Result<Self, Self> {
-        crc16_tarom4545::validate_line(battery_line).map_err(|_| Self::BAD_LINE_VALUE)?;
-        Ok(Self::extract_from_str(battery_line).map_err(|_| Self::BAD_LINE_VALUE)?)
+    pub fn new(battery_line: &str) -> Result<Self, &'static Self> {
+        crc16_tarom4545::validate_line(battery_line).map_err(|_| &Self::BAD_LINE_VALUE)?;
+        Ok(Self::extract_from_str(battery_line).map_err(|_| &Self::BAD_LINE_VALUE)?)
     }
 
     fn extract_from_str(battery_line: &str) -> Result<Self, ()> {
@@ -186,6 +186,6 @@ mod test {
         let line_reading = "1;2021/03/01;23:26;26.2;1.1;#;98.0;#;-0.5;0.0;#;0.0;-0.5;0.5;0.5;3.3;0;F;1;0;0;15.0;10310.5;10.9;6662.4;0;F8BB";
         let result_battery_reading_line = BatteryReadingLine::new(line_reading);
         assert!(result_battery_reading_line.is_err());
-        assert_eq!(result_battery_reading_line, Err(BatteryReadingLine::BAD_LINE_VALUE));
+        assert_eq!(result_battery_reading_line, Err(&BatteryReadingLine::BAD_LINE_VALUE));
     }
 }
