@@ -2,8 +2,6 @@ use std::fmt::Debug;
 use std::str::FromStr;
 use crate::crc16_tarom4545;
 use chrono::{NaiveDate, NaiveTime};
-//use postgres::fallible_iterator::convert;
-//use postgres::types::Type;
 
 /// This struct represents a line sent by the Steca Tarom4545 battery monitor.
 #[allow(dead_code)]
