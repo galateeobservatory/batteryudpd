@@ -74,7 +74,7 @@ impl BatteryDatabase {
                                                       &line.reduction,
                                                       &crc_16,
                                                       &line.erreur_crc16])
-            .map_err(|e| format!("BatteryDatabase: Failed to insert line {}", e))?;
+            .map_err(|e| format!("BatteryDatabase: Failed to insert line: {}", e.to_string()))?;
         Ok(())
 
     }

@@ -14,15 +14,19 @@ fn main() {
 
     loop {
         let mut buf = [0; 150];
-        let (amt, src) = socket.recv_from(&mut buf).unwrap();
-        println!("{:?}", amt);
-        println!("{:?}", src);
-        println!("{:?}", String::from_utf8_lossy(&buf[..amt]));
-        //crc16_tarom4545::validate_line(String::from_utf8_lossy(&buf[..amt]).trim()).unwrap();
+        let (amt, _) = match socket.recv_from(&mut buf) {
+            Ok(x) => x,
+            Err(e) => {
+                eprintln!("Error receiving datagram: {}", e);
+                continue;
+            }
+        };
         let line = match battery_reading_line::BatteryReadingLine::new(String::from_utf8_lossy(&buf[..amt]).trim()) {
             Ok(line) => line,
             Err(err_line) => *err_line
         };
-        battery_database.insert_line(&line).unwrap();
+        if let Err(e) = battery_database.insert_line(&line) {
+            eprintln!("{}", e);
+        }
     }
 }
