@@ -40,7 +40,7 @@ First create a table in your database named **battery** with following columns:
 | sortie_energie_24h            | real                        |
 | sortie_energie_total          | real                        |
 | reduction                     | boolean                     |
-| crc16                         | character varying           |
+| crc16                         | character varying (>= 4)    |
 | erreur_crc16                  | boolean                     |
 
 Then create a **.env** file in the same directory than the executable with the following variables:
