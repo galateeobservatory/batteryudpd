@@ -6,7 +6,7 @@ fn main() {
         eprintln!("Problem parsing arguments: {}", err);
         std::process::exit(1);
     });
-    let battery_database = battery_database::BatteryDatabase::new(&config).unwrap_or_else(|err| {
+    let mut battery_database = battery_database::BatteryDatabase::new(&config).unwrap_or_else(|err| {
         eprintln!("Problem connecting to PostgreSQL database: {}", err);
         std::process::exit(1);
     });
@@ -26,7 +26,11 @@ fn main() {
             Err(err_line) => *err_line
         };
         if let Err(e) = battery_database.insert_line(&line) {
-            eprintln!("{}", e);
+            eprintln!("{} - reconnecting to database", e);
+            battery_database = battery_database::BatteryDatabase::new(&config).unwrap_or_else(|err| {
+                eprintln!("Problem connecting to PostgreSQL database: {}", err);
+                std::process::exit(1);
+            });
         }
     }
 }
